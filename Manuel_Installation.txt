@@ -1,0 +1,10 @@
+Installation et démarrage du serveur
+- Télécharger le fichier zip
+- Dézipper ce fichier
+- Ouvrir le fichier serveur.py avec Spyder
+- Exécuter le code de serveur.py
+- Ouvrir un navigateur web
+- Entrer l'URL http://localhost:8080/CarteAfrique.html
+
+Fonctionnalités proposées par la carte
+Chaque étiquette permet de localiser une capitale du continent africain. Il faut cliquer dessus afin d'obtenir des informations sur le pays notamment le nom du pays, son drapeau, sa capitale et ses coordonnées.
