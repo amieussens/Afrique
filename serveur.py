@@ -67,10 +67,10 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
   def send_static(self):
 
-    # on modifie le chemin d'accès en insérant un répertoire préfixe
+    # Modification du chemin d'accès en insérant un répertoire préfixe
     self.path = self.static_dir + self.path
 
-    # on appelle la méthode parent (do_GET ou do_HEAD)
+    # Appel de la méthode parent (do_GET ou do_HEAD)
     # à partir du verbe HTTP (GET ou HEAD)
     if (self.command=='HEAD'):
         http.server.SimpleHTTPRequestHandler.do_HEAD(self)
