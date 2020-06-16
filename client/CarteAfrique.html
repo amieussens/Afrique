@@ -2,7 +2,7 @@
 
 <script src="leaflet.js"> // Bibliothèque Leaflet : http://leafletjs.com/ </script>
 
-<title>Afrique</title>
+<title>AFRIQUE</title>
 <link rel="stylesheet" type="text/css" href="leaflet.css"/>
 <link rel="stylesheet" type="text/css" href="style.css"/>
 
@@ -10,7 +10,7 @@
 
 <!-- Récupération de la liste des pays au chargement de la page -->
 <body onload="load_data();" onKeyPress="if (event.keyCode == 13) envoiformulaire()">
-  <h1>Afrique</h1>
+  <h1>AFRIQUE</h1>
   <div>
   <table border='0'>
     <tr>
@@ -21,18 +21,9 @@
     <td>
     <table border='0'>
     <tr>
-      <fieldset id='selectchoice_field'>
-        <span title="popup">Type de recherche</span>
-        <br>
-        <select id='select_type' name="select_type"> 
-         <option>Recherche d'un pays</option>
-         <option>Liste des pays</option>
-        </select>
-        <button id="bouton_select">Rechercher</button>
-      </fieldset>
       
         <fieldset id='pays_select_field'>
-        <span title="popup">Pays</span>
+        <span title="popup">Liste des Pays</span>
         <br>
         <select id='pays_select' name="pays_select"> 
          <option>Algeria</option>
@@ -91,18 +82,16 @@
         </select>
         <button id="bouton">Informations</button>
       </fieldset> 
-    <td>
+
       <fieldset id='searchbar'>
-        <span title="popup">Pays</span>
+        <span title="popup">Rechercher un Pays</span>
         <label for="pays"><input id="pays"></label>
-        <button id="envoiformulaire">Informations sur le pays</button>
+        <button id="envoiformulaire">Rechercher</button>
       </fieldset>
     </td>
     <td>
-     
-    </td> 
+
     </tr>
-    <tr>
     
  <!-- Zone pour l'affichage dynamique des descriptions -->
   <p id="description"></p>
