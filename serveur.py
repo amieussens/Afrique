@@ -76,3 +76,27 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         http.server.SimpleHTTPRequestHandler.do_HEAD(self)
     else:
         http.server.SimpleHTTPRequestHandler.do_GET(self)
+    
+  # Analyse de la requête pour initialiser nos paramètres
+
+  def init_params(self):
+    # Analyse de l'adresse
+    info = urlparse(self.path)
+    self.path_info = [unquote(v) for v in info.path.split('/')[1:]]  # info.path.split('/')[1:]
+    self.query_string = info.query
+    self.params = parse_qs(info.query)
+
+    # Récupération du corps
+    length = self.headers.get('Content-Length')
+    ctype = self.headers.get('Content-Type')
+    if length:
+      self.body = str(self.rfile.read(int(length)),'utf-8')
+      if ctype == 'application/x-www-form-urlencoded' : 
+        self.params = parse_qs(self.body)
+    else:
+      self.body = ''
+   
+    # Traces
+    print('path_info =',self.path_info)
+    print('body =',length,ctype,self.body)
+    print('params =', self.params)
