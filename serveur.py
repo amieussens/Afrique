@@ -100,3 +100,43 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
     print('path_info =',self.path_info)
     print('body =',length,ctype,self.body)
     print('params =', self.params)
+
+  # Renvoi de la liste des pays avec leurs coordonnées
+
+  def send_json_countries(self,continent):
+
+    # Récupération de la liste de pays depuis la base de données
+    r = self.db_get_countries(continent)
+
+    # Renvoi d'une liste de dictionnaires au format JSON
+    data = [ {k:a[k] for k in a.keys()} for a in r]
+    json_data = json.dumps(data, indent=4)
+    headers = [('Content-Type','application/json')]
+    self.send(json_data,headers)
+
+  def send_json(self,data,headers=[]):
+     body = bytes(json.dumps(data),'utf-8') # encodage en json et UTF-8
+     self.send_response(200)
+     self.send_header('Content-Type','application/json')
+     self.send_header('Content-Length',int(len(body)))
+     [self.send_header(*t) for t in headers]
+     self.end_headers()
+     self.wfile.write(body)
+
+  # Renvoi de la liste des pays
+
+  def send_countries(self):
+
+    # Récupération de la liste des pays dans la base
+    r = self.db_get_countries()
+
+    # Construction de la réponse
+    txt = 'List of all {} countries :\n'.format(len(r))
+    n = 0
+    for a in r:
+       n += 1
+       txt = txt + '[{}] - {}\n'.format(n,a[0])
+    
+    # Envoi de la réponse
+    headers = [('Content-Type','text/plain;charset=utf-8')]
+    self.send(txt,headers)
