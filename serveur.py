@@ -140,3 +140,53 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
     # Envoi de la réponse
     headers = [('Content-Type','text/plain;charset=utf-8')]
     self.send(txt,headers)
+
+
+  # Renvoi des informations d'un pays
+
+  def send_country(self,country):
+
+    # Récupération du pays depuis la base de données
+    r = self.db_get_country(country)
+
+    # Pays demandé non trouvé
+    if r == None:
+      self.send_error(404,'Country not found')
+
+    # Génération d'un document au format html
+    else:
+      body = '<!DOCTYPE html>\n<meta charset="utf-8">\n'
+      body += '<title>{}</title>'.format(country)
+      body += '<link rel="stylesheet" href="/TD2-s8.css">'
+      body += '<main>'
+      body += '<h1>{}</h1>'.format(r['name'])
+      body += '<ul>'
+      body += '<li>{}: {}</li>'.format('Continent',r['continent'].capitalize())
+      body += '<li>{}: {}</li>'.format('Capital',r['capital'])
+      body += '<li>{}: {:.3f}</li>'.format('Latitude',r['latitude'])
+      body += '<li>{}: {:.3f}</li>'.format('Longitude',r['longitude'])
+      body += '</ul>'
+      body += '</main>'
+
+      # Envoi de la réponse
+      headers = [('Content-Type','text/html;charset=utf-8')]
+      self.send(body,headers)
+
+  
+  # Renvoi des informations d'un pays au format json
+  #
+  def send_json_country(self,country):
+
+    # Récupération du pays depuis la base de données
+    r = self.db_get_country(country)
+
+    # Pays demandé non trouvé
+    if r == None:
+      self.send_error(404,'Country not found')
+
+    # Renvoi d'un dictionnaire au format JSON
+    else:
+      data = {k:r[k] for k in r.keys()}
+      json_data = json.dumps(data, indent=4)
+      headers = [('Content-Type','application/json')]
+      self.send(json_data,headers)
