@@ -190,3 +190,70 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
       json_data = json.dumps(data, indent=4)
       headers = [('Content-Type','application/json')]
       self.send(json_data,headers)
+
+
+  # Récupération de la liste des pays depuis la base
+
+  def db_get_countries(self,continent=None):
+    c = conn.cursor()
+    sql = 'SELECT wp, capital, latitude, longitude, id, currency, area_km2, drives_on, calling_code, leader_name, leader_title, government_type, cctld from countries' 
+
+    # Les pays d'un continent
+    if continent:
+      sql += ' WHERE continent LIKE ?'
+      c.execute(sql,('%{}%'.format(continent),))
+
+    # Tous les pays de la base
+    else:
+      c.execute(sql)
+
+    return c.fetchall()
+
+
+
+  # Récupération d'un pays dans la base
+
+  def db_get_country(self,country):
+    # Préparation de la requête SQL
+    c = conn.cursor()
+    sql = 'SELECT * from countries WHERE wp=?'
+
+    # Récupération de l'information (ou pas)
+    c.execute(sql,(country,))
+    return c.fetchone()
+
+
+  # Envoi des entêtes et du corps fourni
+
+  def send(self,body,headers=[]):
+
+    # Encodage de la chaine de caractères à envoyer
+    encoded = bytes(body, 'UTF-8')
+
+    self.send_raw(encoded,headers)
+
+  def send_raw(self,data,headers=[]):
+    # Envoi de la ligne de statut
+    self.send_response(200)
+
+    # Envoi des lignes d'entête et de la ligne vide
+    [self.send_header(*t) for t in headers]
+    self.send_header('Content-Length',int(len(data)))
+    self.end_headers()
+
+    # Envoi du corps de la réponse
+    self.wfile.write(data)
+
+ 
+# Ouverture d'une connexion avec la base de données
+
+conn = sqlite3.connect('pays.sqlite')
+
+# Pour accéder au résultat des requêtes sous forme d'un dictionnaire
+conn.row_factory = sqlite3.Row
+
+# Instanciation et lancement du serveur
+
+httpd = socketserver.TCPServer(("", 8080), RequestHandler)
+httpd.serve_forever()
+
