@@ -26,61 +26,61 @@
         <span title="popup">Liste des Pays</span>
         <br>
         <select id='pays_select' name="pays_select"> 
-         <option>Algeria</option>
-         <option>Angola</option>
-         <option>Benin</option>
-         <option>Botswana</option>
-         <option>Burkina_Faso</option>
-         <option>Burundi</option>
-         <option>Cameroon</option>
-         <option>Cape_Verde</option>
-         <option>Central_African_Republic</option>
-         <option>Chad</option>
-         <option>Comoros</option>
-         <option>Democratic_Republic_of_the_Congo</option>
-         <option>Djibouti</option>
-         <option>Egypt</option>
-         <option>Equatorial_Guinea</option>
-         <option>Eritrea</option>
-         <option>Eswatini</option>
-         <option>Ethiopia</option>
-         <option>Gabon</option>
-         <option>Ghana</option>
-         <option>Guinea-Bissau</option>
-         <option>Guinea</option>
-         <option>Ivory_Coast</option>
-         <option>Kenya</option>
-         <option>Lesotho</option>
-         <option>Liberia</option>
-         <option>Madagascar</option>
-         <option>Malawi</option>
-         <option>Mali</option>
-         <option>Mauritania</option>
-         <option>Mauritius</option>
-         <option>Morocco</option>
-         <option>Mozambique</option>
-         <option>Namibia</option>
-         <option>Niger</option>
-         <option>Nigeria</option>
-         <option>Republic_of_the_Congo</option>
-         <option>Rwanda</option>
-         <option>São_Tomé_and_Príncipe</option>
-         <option>Senegal</option>
-         <option>Seychelles</option>
-         <option>Sierra_Leone</option>
-         <option>Somalia</option>
-         <option>South_Africa</option>
-         <option>South_Sudan</option>
-         <option>Sudan</option>
-         <option>Tanzania</option>
-         <option>The_Gambia</option>
-         <option>Togo</option>
-         <option>Tunisia</option>
-         <option>Uganda</option>
-         <option>Zambia</option>
-         <option>Zimbabwe</option>
+         <option value='Algeria'>Algeria</option>
+         <option value='Angola'>Angola</option>
+         <option value='Benin'>Benin</option>
+         <option value='Botswana'>Botswana</option>
+         <option value='Burkina_Faso'>Burkina_Faso</option>
+         <option value='Burundi'>Burundi</option>
+         <option value='Cameroon'>Cameroon</option>
+         <option value='Cape_Verde'>Cape_Verde</option>
+         <option value='Central_African_Republic'>Central_African_Republic</option>
+         <option value='Chad'>Chad</option>
+         <option value='Comoros'>Comoros</option>
+         <option value='Democratic_Republic_of_the_Congo'>Democratic_Republic_of_the_Congo</option>
+         <option value='Djibouti'>Djibouti</option>
+         <option value='Egypt'>Egypt</option>
+         <option value='Equatorial_Guinea'>Equatorial_Guinea</option>
+         <option value='Eritrea'>Eritrea</option>
+         <option value='Eswatini'>Eswatini</option>
+         <option value='Ethiopia'>Ethiopia</option>
+         <option value='Gabon'>Gabon</option>
+         <option value='Ghana'>Ghana</option>
+         <option value='Guinea-Bissau'>Guinea-Bissau</option>
+         <option value='Guinea'>Guinea</option>
+         <option value='Ivory_Coast'>Ivory_Coast</option>
+         <option value='Kenya'>Kenya</option>
+         <option value='Lesotho'>Lesotho</option>
+         <option value='Liberia'>Liberia</option>
+         <option value='Madagascar'>Madagascar</option>
+         <option value='Malawi'>Malawi</option>
+         <option value='Mali'>Mali</option>
+         <option value='Mauritania'>Mauritania</option>
+         <option value='Mauritius'>Mauritius</option>
+         <option value='Morocco'>Morocco</option>
+         <option value='Mozambique'>Mozambique</option>
+         <option value='Namibia'>Namibia</option>
+         <option value='Niger'>Niger</option>
+         <option value='Nigeria'>Nigeria</option>
+         <option value='Republic_of_the_Congo'>Republic_of_the_Congo</option>
+         <option value='Rwanda'>Rwanda</option>
+         <option value='São_Tomé_and_Príncipe'>São_Tomé_and_Príncipe</option>
+         <option value='Senegal'>Senegal</option>
+         <option value='Seychelles'>Seychelles</option>
+         <option value='Sierra_Leone'>Sierra_Leone</option>
+         <option value='Somalia'>Somalia</option>
+         <option value='South_Africa'>South_Africa</option>
+         <option value='South_Sudan'>South_Sudan</option>
+         <option value='Sudan'>Sudan</option>
+         <option value='Tanzania'>Tanzania</option>
+         <option value='The_Gambia'>The_Gambia</option>
+         <option value='Togo'>Togo</option>
+         <option value='Tunisia'>Tunisia</option>
+         <option value='Uganda'>Uganda</option>
+         <option value='Zambia'>Zambia</option>
+         <option value='Zimbabwe'>Zimbabwe</option>
         </select>
-        <button id="bouton">Informations</button>
+        <input type="button" value="Informations" onclick="appuiBoutonInfos()">
       </fieldset> 
 
       <fieldset id='searchbar'>
@@ -146,8 +146,33 @@ function load_data () {
 }
 
 
+//document.getElementById('bouton').addEventListener('click',appuiBoutonInfos,true)
+function appuiBoutonInfos () {
 
+  // ok
+  var xhr = new XMLHttpRequest();
 
+  // ok
+  var select = document.getElementById('pays_select')
+  var id_pays = select.selectedIndex;
+  var pays = select.options[id_pays].value;
+
+  // ok
+  xhr.open('GET','/service/country/'+pays,true);
+
+  // ok
+  xhr.onload = function() {
+    var data = JSON.parse(this.responseText);
+    window.country_name.textContent=data.wp;
+    window.wp.textContent=data.name;
+    window.capital.textContent=data.capital;
+    window.latitude.textContent=data.latitude.toFixed(3);
+    window.longitude.textContent=data.longitude.toFixed(3);
+  }
+  
+
+  xhr.send()
+}
 
 // Fonction appelée lors d'un clic sur un marqueur
 function OnMarkerClick (e) {
@@ -165,8 +190,8 @@ function OnMarkerClick (e) {
     // affichage dans la zone 'description' du nom (reprise dans le popup)
     // et de la description récupérée par l'appel au serveur
     description.innerHTML =  '<b><i>' + e.target.getPopup().getContent() + '</i></b><br>'+ data.desc;
-    window.country_name.textContent=data.name;
-    window.wp.textContent=data.wp;
+    window.country_name.textContent=data.wp;
+    window.wp.textContent=data.name;
     window.capital.textContent=data.capital;
     window.latitude.textContent=data.latitude.toFixed(3);
     window.longitude.textContent=data.longitude.toFixed(3);
@@ -189,10 +214,10 @@ function OnMarkerClick (e) {
 
 <div id="country_data" class="hidden">
  <h1 id="country_name"></h1>
- <div><span class="label">Country:</span><a id="wp" href=""></a></div>
- <div><span class="label">Capital:</span><a id="capital" href=""></a></div>
- <div><span class="label">Latitude:</span><span class="value" id="latitude"></span></div>
- <div><span class="label">Longitude:</span><span class="value" id="longitude"></span></div>
+ <div><span class="label">Country : </span><a id="wp" href=""></a></div>
+ <div><span class="label">Capital : </span><a id="capital" href=""></a></div>
+ <div><span class="label">Latitude : </span><span class="value" id="latitude"></span></div>
+ <div><span class="label">Longitude : </span><span class="value" id="longitude"></span></div>
  <img id="flag" src="">
 </div>
 
