@@ -41,13 +41,13 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
       
       
     elif self.path_info[0] == "location":
-      r = self.db_get_countries('africa')
+      r = self.db_get_countries()
       data = [{k:a[k] for k in a.keys()} for a in r]
       print(data)
       self.send_json(data)
       
     elif self.path_info[0] == "description":
-      r = self.db_get_countries('africa') 
+      r = self.db_get_countries() 
       data = [{k:a[k] for k in a.keys()} for a in r]
       for c in data:
         if c['id'] == int(self.path_info[1]):
@@ -110,6 +110,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
     # Renvoi d'une liste de dictionnaires au format JSON
     data = [ {k:a[k] for k in a.keys()} for a in r]
+    print(data)
     json_data = json.dumps(data, indent=4)
     headers = [('Content-Type','application/json')]
     self.send(json_data,headers)
@@ -194,7 +195,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
   # Récupération de la liste des pays depuis la base
 
-  def db_get_countries(self,continent=None):
+  def db_get_countries(self):
     c = conn.cursor()
     sql = 'SELECT wp, name, capital, latitude, longitude FROM countries' 
 
@@ -206,7 +207,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
     # Tous les pays de la base
     #else:
     #  c.execute(sql)
-
+    c.execute(sql)
     return c.fetchall()
 
 
