@@ -30,17 +30,17 @@
          <option value='Angola'>Angola</option>
          <option value='Benin'>Benin</option>
          <option value='Botswana'>Botswana</option>
-         <option value='Burkina_Faso'>Burkina_Faso</option>
+         <option value='Burkina_Faso'>Burkina Faso</option>
          <option value='Burundi'>Burundi</option>
          <option value='Cameroon'>Cameroon</option>
-         <option value='Cape_Verde'>Cape_Verde</option>
-         <option value='Central_African_Republic'>Central_African_Republic</option>
+         <option value='Cape_Verde'>Cape Verde</option>
+         <option value='Central_African_Republic'>Central African Republic</option>
          <option value='Chad'>Chad</option>
          <option value='Comoros'>Comoros</option>
-         <option value='Democratic_Republic_of_the_Congo'>Democratic_Republic_of_the_Congo</option>
+         <option value='Democratic_Republic_of_the_Congo'>Democratic Republic of the Congo</option>
          <option value='Djibouti'>Djibouti</option>
          <option value='Egypt'>Egypt</option>
-         <option value='Equatorial_Guinea'>Equatorial_Guinea</option>
+         <option value='Equatorial_Guinea'>Equatorial Guinea</option>
          <option value='Eritrea'>Eritrea</option>
          <option value='Eswatini'>Eswatini</option>
          <option value='Ethiopia'>Ethiopia</option>
@@ -48,7 +48,7 @@
          <option value='Ghana'>Ghana</option>
          <option value='Guinea-Bissau'>Guinea-Bissau</option>
          <option value='Guinea'>Guinea</option>
-         <option value='Ivory_Coast'>Ivory_Coast</option>
+         <option value='Ivory_Coast'>Ivory Coast</option>
          <option value='Kenya'>Kenya</option>
          <option value='Lesotho'>Lesotho</option>
          <option value='Liberia'>Liberia</option>
@@ -62,18 +62,18 @@
          <option value='Namibia'>Namibia</option>
          <option value='Niger'>Niger</option>
          <option value='Nigeria'>Nigeria</option>
-         <option value='Republic_of_the_Congo'>Republic_of_the_Congo</option>
+         <option value='Republic_of_the_Congo'>Republic of the Congo</option>
          <option value='Rwanda'>Rwanda</option>
-         <option value='São_Tomé_and_Príncipe'>São_Tomé_and_Príncipe</option>
+         <option value='São_Tomé_and_Príncipe'>São Tomé and Príncipe</option>
          <option value='Senegal'>Senegal</option>
          <option value='Seychelles'>Seychelles</option>
-         <option value='Sierra_Leone'>Sierra_Leone</option>
+         <option value='Sierra_Leone'>Sierra Leone</option>
          <option value='Somalia'>Somalia</option>
-         <option value='South_Africa'>South_Africa</option>
-         <option value='South_Sudan'>South_Sudan</option>
+         <option value='South_Africa'>South Africa</option>
+         <option value='South_Sudan'>South Sudan</option>
          <option value='Sudan'>Sudan</option>
          <option value='Tanzania'>Tanzania</option>
-         <option value='The_Gambia'>The_Gambia</option>
+         <option value='The_Gambia'>The Gambia</option>
          <option value='Togo'>Togo</option>
          <option value='Tunisia'>Tunisia</option>
          <option value='Uganda'>Uganda</option>
@@ -169,10 +169,24 @@ function appuiBoutonInfos () {
 
   xhr.onload = function() {
     var data = JSON.parse(this.responseText);
+
+    // quelques lignes pour enlever les underscore dans les noms de pays à plusieurs mots
+    var newwp = data.wp.split('_');
+    if ( newwp.length==1 ){
+      newwp2=newwp[0];
+    } else{
+        newwp2='';
+        var n;
+        for ( n=0; n<newwp.length; n++ ){
+          newwp2+=newwp[n]+' ';
+        }
+    }
+
+
     description.innerHTML=''
-    window.country_name.textContent=data.wp;
+    window.country_name.textContent=newwp2;
     window.wp.textContent=data.name;
-    window.wp.href='https://en.wikipedia.org/wiki/'+data.wp;
+    window.wp.href='https://en.wikipedia.org/wiki/'+newwp2;
     window.capital.textContent=data.capital;
     window.capital.href='https://en.wikipedia.org/wiki/'+data.capital;
     window.latitude.textContent=data.latitude.toFixed(3)+'°';
@@ -201,10 +215,23 @@ function appuiRecherche(){
       description.innerHTML='<b> 404 : Country not found </b>';
     } else {
       var data = JSON.parse(this.responseText);
+
+      // quelques lignes pour enlever les underscore dans les noms de pays à plusieurs mots
+      var newwp = data.wp.split('_');
+      if ( newwp.length==1 ){
+        newwp2=newwp[0];
+      } else{
+          newwp2='';
+          var n;
+          for ( n=0; n<newwp.length; n++ ){
+            newwp2+=newwp[n]+' ';
+          }
+      }
+
       description.innerHTML='';
-      window.country_name.textContent=data.wp;
+      window.country_name.textContent=newwp2;
       window.wp.textContent=data.name;
-      window.wp.href='https://en.wikipedia.org/wiki/'+data.wp;
+      window.wp.href='https://en.wikipedia.org/wiki/'+newwp2;
       window.capital.textContent=data.capital;
       window.capital.href='https://en.wikipedia.org/wiki/'+data.capital;
       window.latitude.textContent=data.latitude.toFixed(3)+'°';
@@ -238,12 +265,24 @@ function OnMarkerClick (e) {
     // responseText est du type string, data est un objet
     var data = JSON.parse(this.responseText);
 
+    // quelques lignes pour enlever les underscore dans les noms de pays à plusieurs mots
+    var newwp = data.wp.split('_');
+    if ( newwp.length==1 ){
+      newwp2=newwp[0];
+    } else{
+        newwp2='';
+        var n;
+        for ( n=0; n<newwp.length; n++ ){
+          newwp2+=newwp[n]+' ';
+        }
+    }
+
     // affichage dans la zone 'description' du nom (reprise dans le popup)
     // et de la description récupérée par l'appel au serveur
     description.innerHTML=''
-    window.country_name.textContent=data.wp;
+    window.country_name.textContent=newwp2;
     window.wp.textContent=data.name;
-    window.wp.href='https://en.wikipedia.org/wiki/'+data.wp;
+    window.wp.href='https://en.wikipedia.org/wiki/'+newwp2;
     window.capital.textContent=data.capital;
     window.capital.href='https://en.wikipedia.org/wiki/'+data.capital;
     window.latitude.textContent=data.latitude.toFixed(3)+'°';
