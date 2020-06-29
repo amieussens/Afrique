@@ -136,7 +136,7 @@ function load_data () {
       L.marker([data[n].latitude,data[n].longitude]).addTo(map)
        .bindPopup('Lieu = '+data[n].name)
        .addEventListener('click',OnMarkerClick)
-       .idnum=data[n].id; // idnum=data[n].id
+       .idnum=data[n].id;
     }
   };
   // Envoi de la requête Ajax pour la récupération de la liste des capitales
@@ -165,7 +165,14 @@ function OnMarkerClick (e) {
     // affichage dans la zone 'description' du nom (reprise dans le popup)
     // et de la description récupérée par l'appel au serveur
     description.innerHTML =  '<b><i>' + e.target.getPopup().getContent() + '</i></b><br>'+ data.desc;
+    window.country_name.textContent=data.name;
+    window.wp.textContent=data.wp;
+    window.capital.textContent=data.capital;
+    window.latitude.textContent=data.latitude.toFixed(3);
+    window.longitude.textContent=data.longitude.toFixed(3);
   };
+
+
 
   // Le numéro de la capitale est récupéré via la propriété personnalisée du marqueur
   var idnum = e.target.idnum

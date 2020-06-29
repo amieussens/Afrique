@@ -41,14 +41,12 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
       
       
     elif self.path_info[0] == "location":
-      r = self.db_get_countries()
-      data = [{k:a[k] for k in a.keys()} for a in r]
+      data = self.db_get_countries()
       print(data)
       self.send_json(data)
       
     elif self.path_info[0] == "description":
-      r = self.db_get_countries() 
-      data = [{k:a[k] for k in a.keys()} for a in r]
+      data = self.db_get_countries() 
       for c in data:
         if c['id'] == int(self.path_info[1]):
           self.send_json(c)
@@ -208,7 +206,13 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
     #else:
     #  c.execute(sql)
     c.execute(sql)
-    return c.fetchall()
+	
+    r=c.fetchall()
+    data = []
+    for i in range(len(r)):
+        wp, name, capital, latitude, longitude= r[i]
+        data += [{'id':i+1,"name":name, "capital":capital, "latitude":latitude, "longitude":longitude, "wp":wp}]
+    return data
 
 
 
