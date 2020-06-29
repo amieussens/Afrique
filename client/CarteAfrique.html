@@ -86,7 +86,7 @@
       <fieldset id='searchbar'>
         <span title="popup">Rechercher un Pays</span>
         <label for="pays"><input id="pays"></label>
-        <button id="envoiformulaire">Rechercher</button>
+        <input type="button" value="Rechercher" onclick="appuiRecherche()">
       </fieldset>
     </td>
     <td>
@@ -101,6 +101,10 @@
 
 
 <script>
+
+
+
+
 
 // Création d'une carte dans la balise div "map",
 // et position de la vue sur un point donné et un niveau de zoom
@@ -146,33 +150,75 @@ function load_data () {
 }
 
 
-//document.getElementById('bouton').addEventListener('click',appuiBoutonInfos,true)
+
+
+
+
+
+// fonction appelée au clic sur le bouton "Informations"
+
 function appuiBoutonInfos () {
 
-  // ok
   var xhr = new XMLHttpRequest();
 
-  // ok
   var select = document.getElementById('pays_select')
   var id_pays = select.selectedIndex;
   var pays = select.options[id_pays].value;
 
-  // ok
   xhr.open('GET','/service/country/'+pays,true);
 
-  // ok
   xhr.onload = function() {
     var data = JSON.parse(this.responseText);
     window.country_name.textContent=data.wp;
     window.wp.textContent=data.name;
     window.capital.textContent=data.capital;
-    window.latitude.textContent=data.latitude.toFixed(3);
-    window.longitude.textContent=data.longitude.toFixed(3);
+    window.latitude.textContent=data.latitude.toFixed(3)+'°';
+    window.longitude.textContent=data.longitude.toFixed(3)+'°';
   }
   
 
   xhr.send()
 }
+
+
+// fonction appelée au clic sur le bouton "Rechercher"
+
+function appuiRecherche(){
+
+  var xhr = new XMLHttpRequest();
+
+  var pays = document.getElementById('pays').value;
+
+  xhr.open('GET','/service/country/'+pays,true);
+
+  xhr.onload = function() {
+    
+
+    if ( this.status==404 ) {
+      description.innerHTML='<b> 404 : Country not found </b>';
+    } else {
+      var data = JSON.parse(this.responseText);
+      description.innerHTML='';
+      window.country_name.textContent=data.wp;
+      window.wp.textContent=data.name;
+      window.capital.textContent=data.capital;
+      window.latitude.textContent=data.latitude.toFixed(3)+'°';
+      window.longitude.textContent=data.longitude.toFixed(3)+'°';
+    }
+
+
+
+  }
+  
+
+  xhr.send()
+
+}
+
+
+
+
+
 
 // Fonction appelée lors d'un clic sur un marqueur
 function OnMarkerClick (e) {
@@ -193,8 +239,8 @@ function OnMarkerClick (e) {
     window.country_name.textContent=data.wp;
     window.wp.textContent=data.name;
     window.capital.textContent=data.capital;
-    window.latitude.textContent=data.latitude.toFixed(3);
-    window.longitude.textContent=data.longitude.toFixed(3);
+    window.latitude.textContent=data.latitude.toFixed(3)+'°';
+    window.longitude.textContent=data.longitude.toFixed(3)+'°';
   };
 
 
@@ -206,6 +252,10 @@ function OnMarkerClick (e) {
   xhr.open('GET','/description/'+idnum,true);
   xhr.send();
 }
+
+
+
+
 
 
 

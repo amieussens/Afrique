@@ -42,7 +42,6 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
       
     elif self.path_info[0] == "location":
       data = self.db_get_countries()
-      print(data)
       self.send_json(data)
       
     elif self.path_info[0] == "description":
@@ -182,12 +181,15 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
     # Pays demandé non trouvé
     if r == None:
       self.send_error(404,'Country not found')
-
+  
     # Renvoi d'un dictionnaire au format JSON
     else:
       data = {k:r[k] for k in r.keys()}
       json_data = json.dumps(data, indent=4)
       headers = [('Content-Type','application/json')]
+	
+	# On renvoie le dico dans tous les cas : le cas où il est vide est traité dans l'HTML
+      print(json_data)
       self.send(json_data,headers)
 
 
