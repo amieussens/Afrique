@@ -189,7 +189,6 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
       headers = [('Content-Type','application/json')]
 	
 	# On renvoie le dico dans tous les cas : le cas où il est vide est traité dans l'HTML
-      print(json_data)
       self.send(json_data,headers)
 
 
