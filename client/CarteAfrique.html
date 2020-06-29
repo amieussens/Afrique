@@ -169,9 +169,12 @@ function appuiBoutonInfos () {
 
   xhr.onload = function() {
     var data = JSON.parse(this.responseText);
+    description.innerHTML=''
     window.country_name.textContent=data.wp;
     window.wp.textContent=data.name;
+    window.wp.href='https://en.wikipedia.org/wiki/'+data.wp;
     window.capital.textContent=data.capital;
+    window.capital.href='https://en.wikipedia.org/wiki/'+data.capital;
     window.latitude.textContent=data.latitude.toFixed(3)+'°';
     window.longitude.textContent=data.longitude.toFixed(3)+'°';
   }
@@ -201,7 +204,9 @@ function appuiRecherche(){
       description.innerHTML='';
       window.country_name.textContent=data.wp;
       window.wp.textContent=data.name;
+      window.wp.href='https://en.wikipedia.org/wiki/'+data.wp;
       window.capital.textContent=data.capital;
+      window.capital.href='https://en.wikipedia.org/wiki/'+data.capital;
       window.latitude.textContent=data.latitude.toFixed(3)+'°';
       window.longitude.textContent=data.longitude.toFixed(3)+'°';
     }
@@ -235,10 +240,12 @@ function OnMarkerClick (e) {
 
     // affichage dans la zone 'description' du nom (reprise dans le popup)
     // et de la description récupérée par l'appel au serveur
-    description.innerHTML =  '<b><i>' + e.target.getPopup().getContent() + '</i></b><br>'+ data.desc;
+    description.innerHTML=''
     window.country_name.textContent=data.wp;
     window.wp.textContent=data.name;
+    window.wp.href='https://en.wikipedia.org/wiki/'+data.wp;
     window.capital.textContent=data.capital;
+    window.capital.href='https://en.wikipedia.org/wiki/'+data.capital;
     window.latitude.textContent=data.latitude.toFixed(3)+'°';
     window.longitude.textContent=data.longitude.toFixed(3)+'°';
   };
@@ -264,8 +271,8 @@ function OnMarkerClick (e) {
 
 <div id="country_data" class="hidden">
  <h1 id="country_name"></h1>
- <div><span class="label">Country : </span><a id="wp" href=""></a></div>
- <div><span class="label">Capital : </span><a id="capital" href=""></a></div>
+ <div><span class="label">Country : </span><a id="wp"></a></div>
+ <div><span class="label">Capital : </span><a id="capital"></a></div>
  <div><span class="label">Latitude : </span><span class="value" id="latitude"></span></div>
  <div><span class="label">Longitude : </span><span class="value" id="longitude"></span></div>
  <img id="flag" src="">
