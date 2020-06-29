@@ -211,6 +211,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 	
     r=c.fetchall()
     data = []
+	# on donne un id à chaque pays qui correspondra à l'id du marqueur
     for i in range(len(r)):
         wp, name, capital, latitude, longitude= r[i]
         data += [{'id':i+1,"name":name, "capital":capital, "latitude":latitude, "longitude":longitude, "wp":wp}]

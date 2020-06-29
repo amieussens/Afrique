@@ -21,7 +21,7 @@
     <td>
     <table border='0'>
     <tr>
-      
+        <!-- Zone de choix du pays dans une liste déroulante -->
         <fieldset id='pays_select_field'>
         <span title="popup">Liste des Pays</span>
         <br>
@@ -83,6 +83,7 @@
         <input type="button" value="Informations" onclick="appuiBoutonInfos()">
       </fieldset> 
 
+      <!-- Zone de recherche (l'utilisateur écrit le pays recherché) -->
       <fieldset id='searchbar'>
         <span title="popup">Rechercher un Pays</span>
         <label for="pays"><input id="pays"></label>
@@ -93,7 +94,7 @@
 
     </tr>
     
- <!-- Zone pour l'affichage dynamique des descriptions -->
+ <!-- Zone pour l'affichage dynamique d'une éventuelle erreur -->
   <p id="description"></p>
 
   </div>
@@ -138,7 +139,7 @@ function load_data () {
       // attachement d'une popup, capture de l'événement 'clic'
       // ajout d'une propriété personnalisée au marqueur
       L.marker([data[n].latitude,data[n].longitude]).addTo(map)
-       .bindPopup('Lieu = '+data[n].name)
+       .bindPopup('Country : '+data[n].name)
        .addEventListener('click',OnMarkerClick)
        .idnum=data[n].id;
     }
@@ -156,25 +157,32 @@ function load_data () {
 
 
 // fonction appelée au clic sur le bouton "Informations"
-
+// après un choix de l'utilisateur dans la liste déroulante
 function appuiBoutonInfos () {
 
+  // requête
   var xhr = new XMLHttpRequest();
 
+  // on récupère le nom du pays sélectionné dans la liste déroulante
   var select = document.getElementById('pays_select')
   var id_pays = select.selectedIndex;
   var pays = select.options[id_pays].value;
 
+  // on envoie une requête GET /service/country/...
+  // pour récupérer les infos sur le pays demandé
   xhr.open('GET','/service/country/'+pays,true);
 
+  // fonction à lancer lorsqu'on reçoit la réponse du serveur à la requête
   xhr.onload = function() {
+
+    // on lit la réponse du serveur
     var data = JSON.parse(this.responseText);
 
-    // quelques lignes pour enlever les underscore dans les noms de pays à plusieurs mots
+    // quelques lignes pour enlever les underscores dans les noms de pays à plusieurs mots
     var newwp = data.wp.split('_');
-    if ( newwp.length==1 ){
+    if ( newwp.length==1 ){ // s'il n'y a pas d'underscores
       newwp2=newwp[0];
-    } else{
+    } else{                 // s'il y en a
         newwp2='';
         var n;
         for ( n=0; n<newwp.length; n++ ){
@@ -183,37 +191,45 @@ function appuiBoutonInfos () {
     }
 
 
-    description.innerHTML=''
-    window.country_name.textContent=newwp2;
-    window.wp.textContent=data.name;
-    window.wp.href='https://en.wikipedia.org/wiki/'+newwp2;
-    window.capital.textContent=data.capital;
-    window.capital.href='https://en.wikipedia.org/wiki/'+data.capital;
-    window.latitude.textContent=data.latitude.toFixed(3)+'°';
-    window.longitude.textContent=data.longitude.toFixed(3)+'°';
+    description.innerHTML='' // on supprime ce qu'il y avait dans "description"
+                             // au cas où il restait un "Error 404 : ..." du pays précédent (cf fonction appuiRecherche)
+
+    // on met à jours les champs avec les informations sur le pays
+    window.country_name.textContent=newwp2;                             // bandeau du nom de pays
+    window.wp.textContent=data.name;                                    // nom complet du pays
+    window.wp.href='https://en.wikipedia.org/wiki/'+newwp2;             // lien du nom complet
+    window.capital.textContent=data.capital;                            // capitale
+    window.capital.href='https://en.wikipedia.org/wiki/'+data.capital;  // lien de la capitale
+    window.latitude.textContent=data.latitude.toFixed(3)+'°';           // latitude
+    window.longitude.textContent=data.longitude.toFixed(3)+'°';         // longitude
   }
   
-
+  // on envoie la requête
   xhr.send()
 }
 
 
 // fonction appelée au clic sur le bouton "Rechercher"
-
+// après que l'utilisateur ait tapé le pays qu'il recherche
 function appuiRecherche(){
 
+  // requête
   var xhr = new XMLHttpRequest();
 
+  // on récupère ce que l'utilisateur a écrit
   var pays = document.getElementById('pays').value;
 
+  // requête au serveur
   xhr.open('GET','/service/country/'+pays,true);
 
+  // fonction à appeler lorsqu'on reçoit la réponse du serveur
   xhr.onload = function() {
-    
 
-    if ( this.status==404 ) {
-      description.innerHTML='<b> 404 : Country not found </b>';
-    } else {
+    if ( this.status==404 ) { // s'il ne trouve pas le pays le serveur renvoie une erreur 404
+      description.innerHTML='<b> Error 404 : Country not found </b>'; // on l'affiche
+    } else { // si on trouve le pays
+
+      // on récupère les infos
       var data = JSON.parse(this.responseText);
 
       // quelques lignes pour enlever les underscore dans les noms de pays à plusieurs mots
@@ -228,7 +244,9 @@ function appuiRecherche(){
           }
       }
 
-      description.innerHTML='';
+      description.innerHTML=''; // on réinitialise ce champ au cas où il restait un "Error 404 : ..."
+
+      // on met à jour avec les informations renvoyées par le serveur
       window.country_name.textContent=newwp2;
       window.wp.textContent=data.name;
       window.wp.href='https://en.wikipedia.org/wiki/'+newwp2;
@@ -242,7 +260,7 @@ function appuiRecherche(){
 
   }
   
-
+  // on envoie la requête
   xhr.send()
 
 }
@@ -277,9 +295,10 @@ function OnMarkerClick (e) {
         }
     }
 
-    // affichage dans la zone 'description' du nom (reprise dans le popup)
-    // et de la description récupérée par l'appel au serveur
-    description.innerHTML=''
+    
+    description.innerHTML='' // on réinitialise ce champ
+
+    // on remplit les champs avec les infos données par le serveur
     window.country_name.textContent=newwp2;
     window.wp.textContent=data.name;
     window.wp.href='https://en.wikipedia.org/wiki/'+newwp2;
@@ -308,6 +327,7 @@ function OnMarkerClick (e) {
 
 </script>
 
+<!-- Champs où se trouvera les informations sur le pays -->
 <div id="country_data" class="hidden">
  <h1 id="country_name"></h1>
  <div><span class="label">Country : </span><a id="wp"></a></div>
