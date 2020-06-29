@@ -8,4 +8,6 @@ Installation et démarrage du serveur
 
 Fonctionnalités proposées par la carte
 Chaque étiquette permet de localiser une capitale du continent africain. En cliquant dessus, on obtient des informations sur le pays notamment le nom du pays, sa capitale et ses coordonnées géographiques.
-Il y a deux autres façons d'obtenir des informations : en choisissant le pays dans une liste déroulante ou en écrivant son nom dans l'encart prévu.
+Il y a deux autres façons d'obtenir des informations :
+- En choisissant le pays dans une liste déroulante avant de cliquer sur "Informations".
+- En écrivant le nom du pays dans l'encart prévu avant de cliquer sur "Rechercher".
